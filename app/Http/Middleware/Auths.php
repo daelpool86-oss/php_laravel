@@ -17,8 +17,16 @@ class Auths
     public function handle(Request $request, Closure $next): Response
     {   
         if (Auth::check()) {
-            return $next($request);
-        } else {
+            $user = Auth::user();
+            if ($user) {
+                return $next($request);
+            }
+            else {
+                dd($request);
+                return redirect()->route("welcome");
+            }
+        } else {    
+           
             return redirect()->route("welcome");
         }
 

@@ -92,20 +92,55 @@ class UserContrller extends Controller
     public function login(Request $request)
     {
 
-        $credentials = $request->only('email', 'password', 'name');
-        $user = User::where('email', $credentials['email'])->first();
+        $credentials = $request->only('email', 'password', 'username');
+        $user = User::where('email', '=', $credentials['email'])
+            ->where('name', '=', $credentials['username'])
+            ->first();
+        // dd($user);
 
         if (!$user) {
-            return response()->json(["error" => "User not found. Please check your email and try again."], 404);
+            return view("login")->with("error", "User not found. Please check your email and username and try again.");
         }
         if (!password_verify($credentials['password'], $user->password)) {
-            return response()->json(["error" => "Invalid password. Please try again."], 404);
+            
+            return view("login")->with("error", "Invalid password. Please try again.");
         }
         if (!password_verify($credentials['email'] . $credentials['password'], $user->token)) {
-            return response()->json(["error" => "Invalid token. Please try again."], 404);
+            return view("login")->with("error", "Invalid token. Please try again.");
         }
         Auth::login($user);
-        return response()->json(["message" => "Logged in successfully"], 200);
+        // dd((Auth::user()->name));
         
+        return  redirect()->route("home")->with("success","Login successful. Welcome back, " . $user->name . "!");
+    
+    }
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        return response()->json(["message" => "Logged out successfully"], 200);
+    }
+    public function register(Request $request)
+    {
+        $user = new user();
+        $user->name = $request->first_name . " " . $request->last_name;
+        $user->email = $request->email;
+        $user->token = bcrypt($request->email . $request->password);
+        if (User::where("email", $request->email)->exists()) {
+        
+            return view("register")->with("error", "Email already exists. Please choose a different email.");
+        }
+        if (User::where("name", $request->name)->exists()) {
+            return view("register")->with("error", "Username already exists. Please choose a different username.");
+        }
+        if ($request->password != $request->password_confirmation) {
+            
+            return view("register")->with("error", "Password confirmation does not match. Please try again.");
+        }
+        $user->password = bcrypt($request->password);
+        $user->phone = $request->phone;
+        $user->location = $request->location;
+        $user->role = "user";
+        $user->save();
+        return view("login")->with("success", "Registration successful. Please log in.");
     }
 }
