@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -270,38 +269,36 @@
                 <p class="login-subtitle">Sign in to your account</p>
             </div>
 
-            <form method="POST" action="{{ route('loginuser') }}">
+            <form method="POST" action="{{ route('loginuser') }}" >
                 @csrf
-                @if (isset($error))
+                @if (session('error'))
                     <p style="color: red; border: 1px solid #f44336; border-radius: 7px; text-align: center; margin-bottom: 15px; padding: 10px; background-color: #ffebee; width: fit-content; justify-self: center;">
-                        {{ $error }}
+                        {{ session('error') }}
                     </p>
-                    @endif
+                @endif
                 
-              
-                    @if (isset($success))
-                      <p>
+                @if (session('success'))
                     <p style="color: green; border: 1px solid #4CAF50; border-radius: 7px; text-align: center; margin-bottom: 15px; padding: 10px; background-color: #e8f5e8; width: fit-content; justify-self: center;">
-                        {{ $success }}
-               </p>
-                    @endif
-                </p>
+                        {{ session('success') }}
+                    </p>
+                @endif
+
                 <div class="form-group">
                  
                     <label for="username">User Name</label>
                     <input type="text" id="username" name="username" placeholder="Ale hamada .... " required
-                        value="{{ old('name') }}">
+                        value="{{ old('name') }}" autocomplete="username">
                 </div>
 
                 <div class="form-group">
                     <label for="email">Email Address</label>
                     <input type="email" id="email" name="email" placeholder="you@example.com" required
-                        value="{{ old('email') }}">
+                        value="{{ old('email') }}" autocomplete="email">
                 </div>
 
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password" placeholder="••••••••" required>
+                    <input type="password" id="password" name="password" placeholder="••••••••" required autocomplete="current-password">
                 </div>
 
                 <div class="remember-forgot">

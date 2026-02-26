@@ -1,178 +1,111 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Registration Form</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .container {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            max-width: 600px;
-            width: 100%;
-            padding: 40px;
-        }
-
-        h1 {
-            color: #333;
-            margin-bottom: 30px;
-            text-align: center;
-            font-size: 28px;
-        }
-
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        label {
-            color: #555;
-            font-weight: 600;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="password"],
-        input[type="tel"],
-        select {
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 6px;
-            font-size: 15px;
-            font-family: inherit;
-            transition: all 0.3s ease;
-        }
-
-        input[type="text"]:focus,
-        input[type="email"]:focus,
-        input[type="password"]:focus,
-        input[type="tel"]:focus,
-        select:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        select {
-            cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 12px center;
-            background-size: 20px;
-            padding-right: 40px;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        @media (max-width: 600px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        button {
-            padding: 14px 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-    </style>
+    <title>Home - Awesome App</title>
+    <link href="{{ asset('css/home.css') }}" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
-    <div class="container">
-        <h1>User Registration</h1>
-        <form action="{{ route('user-create') }}" method="POST">
-            @csrf
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="name">Name:</label>
-                    <input type="text" id="name" name="name" required placeholder="Enter your full name">
-                </div>
-                <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" required placeholder="Enter your email">
+    <div class="page-wrapper">
+        <!-- Navigation Bar -->
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">Awesome App</div>
+                <div class="user-info">
+                    <span class="user-name">{{ Auth::user()->name }}</span>
+                    <span class="user-badge {{ Auth::user()->role === 'admin' ? 'admin-badge' : 'user-badge' }}">
+                        {{ ucfirst(Auth::user()->role) }}
+                    </span>
                 </div>
             </div>
+        </nav>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" required placeholder="Enter a secure password">
-                </div>
-                <div class="form-group">
-                    <label for="phone">Phone:</label>
-                    <input type="tel" id="phone" name="phone" placeholder="Enter your phone number">
-                </div>
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                @if(Auth::user()->role === 'admin')
+                    <h1 class="hero-title">Welcome back, <span class="gradient-text">{{ Auth::user()->name }}</span>! 👋</h1>
+                    <p class="hero-subtitle">You have administrative privileges. Manage your application with ease.</p>
+                    <div class="hero-actions">
+                        <a href="{{ route('AddNewCard') }}" class="btn btn-primary">
+                            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            Add New Card
+                        </a>
+                    </div>
+                @else
+                    <h1 class="hero-title">Welcome, <span class="gradient-text">{{ Auth::user()->name }}</span>! ✨</h1>
+                    <p class="hero-subtitle">You're all set. Explore everything you have access to below.</p>
+                @endif
             </div>
+            <div class="hero-decoration"></div>
+        </section>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="location">Location:</label>
-                    <input type="text" id="location" name="location" placeholder="Enter your location">
-                </div>
-                <div class="form-group">
-                    <label for="role">Role:</label>
-                    <select id="role" name="role">
-                        <option value="user">User</option>
-                        <option value="admin">Admin</option>
-                        <option value="premium">Premium</option>
-                    </select>
-                </div>
-            </div>
+        <!-- Main Content -->
+        <main class="main-content">
+            @php
+                use App\Models\CardControl;
+                $cards = CardControl::orderBy('order')->get();
+                $cards = $cards->toArray();
+            @endphp
 
-            <button type="submit">Submit</button>
-        </form>
+            <!-- Cards Grid -->
+            <section class="cards-section">
+                <div class="section-header">
+                    <h2 class="section-title">Your Features</h2>
+                    <p class="section-subtitle">Access all your tools and features in one place</p>
+                </div>
+
+                <div class="cards-list">
+                    @forelse($cards as $index => $card)
+                        @php
+                            $rawAccess = json_decode($card['AccessLevel']) ?? '';
+                            $userRole = Auth::user()->role ?? 'guest';
+                            $show = in_array($userRole, $rawAccess);
+                        @endphp
+
+                        @if($show)
+                            <div class="card" style="--card-index: {{ $index }}; --card-color: {{ ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#00f2fe', '#43e97b'][($index % 6)] }}">
+                                <div class="card-header">
+                                    <div class="card-icon">{{ substr($card['name'], 0, 1) }}</div>
+                                </div>
+                                <h3 class="card-title">{{ $card['name'] }}</h3>
+                                <p class="card-description">{{ $card['description'] }}</p>
+                                @if(!empty($card['route']))
+                                    <a href="{{ $card['route'] }}" class="card-link">
+                                        <span>Explore</span>
+                                        <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M5 12h14M12 5l7 7-7 7"></path>
+                                        </svg>
+                                    </a>
+                                @endif
+                                <div class="card-gradient"></div>
+                            </div>
+                        @endif
+                    @empty
+                        <div class="empty-state">
+                            <div class="empty-icon">📭</div>
+                            <h3>No Features Available</h3>
+                            <p>It looks like there are no features available for your account yet.</p>
+                        </div>
+                    @endforelse
+                </div>
+            </section>
+
+            <!-- Footer Section -->
+            <footer class="app-footer">
+                <p>&copy; 2026 Awesome App. All rights reserved.</p>
+            </footer>
+        </main>
     </div>
 </body>
+
 </html>
