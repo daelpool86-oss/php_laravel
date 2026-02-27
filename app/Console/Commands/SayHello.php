@@ -15,7 +15,7 @@ class SayHello extends Command
         $this->info('Command started. Pinging /say-hello every 30s...');
 
         // Base URL to ping — respects APP_URL if set, otherwise localhost:8000
-        $base = config('app.url') ?: 'http://127.0.0.1:8000';
+        $base = config('app.url') ?: 'https://127.0.0.1:8000';
         $endpoint = rtrim($base, '/') . '/say-hello';
 
         while (true) {
